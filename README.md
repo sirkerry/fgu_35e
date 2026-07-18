@@ -29,5 +29,6 @@ also excludes `forge/` and `*.svg` as a safety net.
   Ability checks, skill checks, saving throws, and attack/grapple rolls
   always compare against a flat 20 — any natural target (a spell's DC, or
   a target's AC/CMD) is folded into the roll as a bonus/penalty instead of
-  changing the target number. Ability/skill/save rolls also add character
-  level; attack/grapple rolls do not.
+  changing the target number. Saves add full character level; ability/skill
+  checks add half (avoids automatic success at high level); attack/grapple
+  rolls add none.

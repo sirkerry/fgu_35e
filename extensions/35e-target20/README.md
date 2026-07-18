@@ -6,8 +6,9 @@ FGU extension for the official 3.5E (Dungeons and Dragons 3.5E) and PFRPG
 Standardizes ability checks, skill checks, saving throws, **and attack/
 grapple rolls** to always be compared against a flat **DC/AC 20** — never
 the roll's own "natural" target number. Ability/skill checks and saves also
-always add the character's level on top; attack/grapple rolls do not (level
-is a "non-combat roll" bonus only).
+always add the character's level on top (halved for checks specifically —
+see below); attack/grapple rolls do not (level is a "non-combat roll" bonus
+only).
 
 ---
 
@@ -34,17 +35,30 @@ Target 20.
 3.5E NPCs use Hit Dice rather than a "level" field, so this doesn't apply
 to them.
 
+**Saves get the full level bonus. Ability/skill checks get `floor(level/2)`
+instead.** Checks compare against a fixed DC 20 with no natural
+counter-scaling on the other side — a full `+level` bonus there trends
+toward automatic success well before level 20 (`d20 + mod >= 20 - level`,
+so at level 20 alone you'd only need `d20 + mod >= 0`, i.e. any roll at all
+succeeds regardless of the die). Saves don't have this problem: their DC
+comes from a caster/effect that scales with level on its own side, so a
+full level bonus there stays balanced against a similarly-scaling threat.
+
 This matters most for saves, since a real incoming spell/effect always
 arrives with its own DC already attached; ability and skill checks only
 ever get a pre-set DC from the GM's rarer party-sheet group-check fields,
 so in practice they'll almost always just show a flat `[vs. DC 20]` with
 no adjustment tag.
 
-**Example:** a 5th-level PC with a +2 Reflex modifier fails a DC 16
+**Example (save):** a 5th-level PC with a +2 Reflex modifier fails a DC 16
 fireball save under stock rules with a roll of 10 (`10 + 2 = 12 < 16`).
 Under Target 20: `delta = 20 - 16 = +4`, level `+5` also added, effective
 roll `10 + 2 + 4 + 5 = 21 >= 20` → **SUCCESS**. Chat log shows
 `[DC 16 -> T20 +4] [+5 LEVEL]`.
+
+**Example (check):** that same 5th-level PC rolls a Climb check (no
+incoming DC, so no delta tag). Level bonus is `floor(5/2) = 2`, not `5`.
+Chat log shows `[+2 LEVEL/2]`.
 
 ## Attack and Grapple Rolls
 

@@ -33,6 +33,13 @@
 --    the actor node - the same field ActorManager35E.getAbilityScore reads
 --    for its own "lev"/"lvl" lookup). NPCs get +0 (3.5E NPCs use Hit Dice,
 --    not a "level" field - not handled here, out of scope unless asked).
+--    Saves get the FULL level bonus - HALVED (floor(level/2)) for ability/
+--    skill checks specifically. Checks compare against a fixed DC 20 with
+--    no natural counter-scaling; a full +level bonus there trends toward
+--    automatic success well before level 20 (d20+mod >= 20-level, so level
+--    20 alone would only need d20+mod >= 0). Saves don't have this problem
+--    - their DC comes from a caster/effect that scales with level on its
+--    own side, so full level there stays balanced.
 --
 -- Both adjustments land in rRoll.nMod before any roll-type-specific
 -- modRoll/modSave function runs - safe, since none of those reset nMod,
@@ -107,9 +114,26 @@ function onPreModRoll(rSource, rTarget, rRoll)
 				nLevel = DB.getValue(nodeActor, "level", 0);
 			end
 		end
-		if nLevel ~= 0 then
-			rRoll.nMod = (rRoll.nMod or 0) + nLevel;
-			rRoll.sDesc = (rRoll.sDesc or "") .. string.format(" [%+d LEVEL]", nLevel);
+		if rRoll.sType == "ability" or rRoll.sType == "skill" then
+			-- Halved for checks specifically: these compare against a fixed
+			-- DC 20 with no natural counter-scaling (unlike saves, whose DC
+			-- comes from a caster/effect that scales with level on its own
+			-- side) - a full +level bonus here trends toward automatic
+			-- success well before level 20 (at full level, d20+mod >= 20-level
+			-- means level 20 only needs d20+mod >= 0). floor(level/2) keeps
+			-- checks meaningful across the whole level range.
+			if nLevel ~= 0 then
+				nLevel = math.floor(nLevel / 2);
+			end
+			if nLevel ~= 0 then
+				rRoll.nMod = (rRoll.nMod or 0) + nLevel;
+				rRoll.sDesc = (rRoll.sDesc or "") .. string.format(" [%+d LEVEL/2]", nLevel);
+			end
+		else
+			if nLevel ~= 0 then
+				rRoll.nMod = (rRoll.nMod or 0) + nLevel;
+				rRoll.sDesc = (rRoll.sDesc or "") .. string.format(" [%+d LEVEL]", nLevel);
+			end
 		end
 	end
 
