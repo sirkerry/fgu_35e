@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  3.5E/PFRPG ADV/DIS & Modifier Buttons
+  Stock 3.5E/PFRPG declare zero PLUS/MINUS buttons of their own (unlike 2E,
+  which ships 10 - +1..+5/-1..-5). This file only ADDS controls, nothing to
+  delete.
+
+  Panel widened from CoreRPG's stock 74px (sized for zero buttons) to 236px
+  to fit 4 button pairs (ADV/DIS, +1/-1, +2/-2, +5/-5) - 236 = 200 (5E's own
+  3-pair width) + 36 (one more 30px button + 6px gap) for the +1/-1 pair
+  added 2026-07-17.
+
+  ADV/DISADV names are load-bearing: button_modifierkey's generic script
+  (CoreRPG utility_modifiers.xml) uses the control's own name as the literal
+  ModifierManager key via setData(getName()). "Feature: Extended Automation"
+  reads exactly getKey("ADV")/getKey("DISADV") (manager_actions_kel.lua) -
+  NOT 5E's own "ADV"/"DIS" pair - so DISADV must be spelled out here even
+  though the visible <text> still just says "DIS".
+
+  PLUS1/MINUS1/PLUS2/MINUS2/PLUS5/MINUS5 are read by this extension's own
+  scripts/manager_35e_advdis.lua (3.5E/PFRPG have no numeric modifier-key
+  engine of their own, unlike 2E or 5E).
+
+  Anchor chain mirrors fgu_2e/extensions/2e-advdis's proven layout: first
+  pair offset 17 off the wide "modifier" field, every later pair offset 6,
+  top row offset -4, bottom row anchor="bottom" offset 8.
+
+  IMPORTANT: every top-row button's <anchored to="..."> must be "modifier",
+  never the previous pair's own button name. <top offset="-4"/> (no
+  relation="relative") is a literal "target.top + offset", NOT a running
+  chain - anchoring PLUS2 to="ADV" and PLUS5 to="PLUS2" (a first attempt)
+  compounds the -4 upward on every pair (PLUS2 ends up 4px above ADV, PLUS5
+  8px above ADV), a subtle rising-stair layout bug the user spotted visually.
+  The horizontal <left anchor="right" relation="relative"> chaining does NOT
+  have this problem - relation="relative" tracks a running document-order
+  pointer regardless of the literal "to" target (already confirmed true even
+  when every button here shares to="modifier"), so only <top> needed fixing.
+  Bottom-row buttons (DISADV/MINUS2/MINUS5) correctly anchor to="theirOwnTopRowButton"
+  since anchor="bottom" is meant to chain off one specific sibling directly
+  above it, not off "modifier".
+
+  The dicepanel (the row of individual die-type buttons - d20/d12/d10/d8/d6/
+  d4/d100 - visible at the bottom of the desktop; NOT the dicetower, which is
+  a separate optional drag-and-drop 3D-roll widget) is positioned with a
+  fixed ABSOLUTE <left offset="75" /> in stock CoreRPG
+  (CoreRPG/desktop/desktop_panels.xml:104-112) - completely independent of
+  modifierstack's own width. Widening modifierstack to 200px (right edge now
+  ~205px) drives straight into dicepanel's fixed 75px starting position, so
+  it has to be re-anchored relative to modifierstack instead of left as an
+  absolute offset.
+
+  Reuses the SAME anchor tag the stock panel already declares (<left>), just
+  switching from a fixed offset to a parent-relative anchor - swapping to a
+  DIFFERENT tag (e.g. overriding via <right> instead) would leave both the
+  old and new anchor active simultaneously under merge="join" (confirmed
+  elsewhere on this project: produces a silent "Anchored static width
+  ignored" console warning and an under-constrained result, not a clean
+  override - see [[reference_fgu_constraints]]).
+-->
+
+<root>
+	<panel name="modifierstack" merge="join">
+		<anchored width="236" height="62">
+			<left offset="5" />
+			<top anchor="bottom" offset="-100" />
+		</anchored>
+	</panel>
+
+	<panel name="dicepanel" merge="join">
+		<anchored width="50" height="50">
+			<top anchor="bottom" offset="-105" />
+			<left parent="modifierstack" anchor="right" offset="10" />
+		</anchored>
+	</panel>
+
+	<windowclass name="modifierstack" merge="join">
+		<sheetdata merge="join">
+			<button_modifierkey name="ADV">
+				<anchored to="modifier" width="30" height="18">
+					<top offset="-4" />
+					<left anchor="right" relation="relative" offset="17" />
+				</anchored>
+				<text>ADV</text>
+			</button_modifierkey>
+			<button_modifierkey name="DISADV">
+				<anchored to="ADV" width="30" height="18">
+					<top anchor="bottom" offset="8" />
+					<left anchor="left" />
+				</anchored>
+				<text>DIS</text>
+			</button_modifierkey>
+
+			<button_modifierkey name="PLUS1">
+				<anchored to="modifier" width="30" height="18">
+					<top offset="-4" />
+					<left anchor="right" relation="relative" offset="6" />
+				</anchored>
+				<text>+1</text>
+			</button_modifierkey>
+			<button_modifierkey name="MINUS1">
+				<anchored to="PLUS1" width="30" height="18">
+					<top anchor="bottom" offset="8" />
+					<left anchor="left" />
+				</anchored>
+				<text>-1</text>
+			</button_modifierkey>
+
+			<button_modifierkey name="PLUS2">
+				<anchored to="modifier" width="30" height="18">
+					<top offset="-4" />
+					<left anchor="right" relation="relative" offset="6" />
+				</anchored>
+				<text>+2</text>
+			</button_modifierkey>
+			<button_modifierkey name="MINUS2">
+				<anchored to="PLUS2" width="30" height="18">
+					<top anchor="bottom" offset="8" />
+					<left anchor="left" />
+				</anchored>
+				<text>-2</text>
+			</button_modifierkey>
+
+			<button_modifierkey name="PLUS5">
+				<anchored to="modifier" width="30" height="18">
+					<top offset="-4" />
+					<left anchor="right" relation="relative" offset="6" />
+				</anchored>
+				<text>+5</text>
+			</button_modifierkey>
+			<button_modifierkey name="MINUS5">
+				<anchored to="PLUS5" width="30" height="18">
+					<top anchor="bottom" offset="8" />
+					<left anchor="left" />
+				</anchored>
+				<text>-5</text>
+			</button_modifierkey>
+		</sheetdata>
+	</windowclass>
+</root>

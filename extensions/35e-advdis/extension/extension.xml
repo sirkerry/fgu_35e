@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root version="4.1">
+	<properties>
+		<name>Feature: 3.5E/PFRPG ADV/DIS &amp; Modifier Buttons</name>
+		<version>1.0</version>
+		<author>Kerry Harrison (sirkerry)</author>
+		<description>Adds 5E-style modifier stack buttons (ADV/DIS, +2/-2, +5/-5) to the 3.5E and PFRPG desktop. REQUIRES "Feature: Extended Automation" (by rhythmist et al.) to be loaded - that extension is what actually applies Advantage/Disadvantage to the dice when the ADV/DIS buttons are clicked; this extension only supplies the buttons plus the +2/-2/+5/-5 numeric modifier engine, neither of which exist in stock 3.5E/PFRPG.</description>
+		<ruleset>
+			<name>3.5E</name>
+		</ruleset>
+		<ruleset>
+			<name>PFRPG</name>
+		</ruleset>
+		<loadorder>40</loadorder>
+	</properties>
+
+	<announcement text="3.5E/PFRPG ADV/DIS &amp; Modifier Buttons - Version 1.0 by sirkerry - requires Feature: Extended Automation" font="emotefont" />
+
+	<base>
+		<includefile source="desktop/desktop_modifierstack_35e_advdis.xml" />
+		<script name="AdvDis35EManager" file="scripts/manager_35e_advdis.lua" />
+	</base>
+</root>
