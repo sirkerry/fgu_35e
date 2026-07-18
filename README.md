@@ -32,3 +32,8 @@ also excludes `forge/` and `*.svg` as a safety net.
   changing the target number. Saves add full character level; ability/skill
   checks add half (avoids automatic success at high level); attack/grapple
   rolls add none.
+- **[35e-subraces](extensions/35e-subraces/README.md)** — Subraces. Adds a
+  Subraces section to the Race record (stock 3.5E/PFRPG has none). Ctrl-drop
+  a race onto it to copy it in as a new subrace; applying a race with
+  subraces to a character prompts for which one, then applies that
+  subrace's own traits alongside the base race's.

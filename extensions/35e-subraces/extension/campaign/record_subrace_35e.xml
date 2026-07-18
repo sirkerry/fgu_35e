@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  3.5E/PFRPG Subraces
+  Stock 3.5E/PFRPG has zero Subraces concept anywhere (confirmed via direct
+  source read of manager_char.lua and a grep across 3.5E/CoreRPG/PFRPG for
+  "subrace" - only a handful of orphaned CoreRPG strings exist,
+  library_recordtype_*_race_subrace, never consumed by any windowclass or
+  script in 3.5E/PFRPG). This file adds a new "referencesubrace" record
+  type (nested-only, nothing to browse independently in the sidebar - same
+  convention already used by 2E's own native Subraces and FSOSR's own
+  reference_subrace) and a "Subraces" section on the base Race record.
+
+  referencesubrace_main is a near-exact structural copy of 3.5E's own
+  referencerace_main (down to matching its own tab-resource quirk: the
+  free-text notes tab uses resource "tab_main", the structured content tab
+  uses "tab_other" - preserved here for consistency with the sibling
+  record, not "fixed" to what might look more intuitively named) - same
+  Traits section, reusing the exact same row class (ref_racial_trait) and
+  datasource field name (.racialtraits) the base Race record already uses,
+  so scripts/manager_35e_subraces.lua can apply a chosen subrace's traits
+  through the exact same CharManager.addRacialTrait loop the stock ruleset
+  already uses for the base race - no new trait-application logic needed.
+
+  All three orphaned CoreRPG strings are reused directly for UI text -
+  no new strings needed for this part: library_recordtype_label_race_subrace
+  ("Subraces"), library_recordtype_empty_race_subrace ("« New Subrace »").
+-->
+
+<root>
+	<windowclass name="referencesubrace" copy="record_window_tabbed">
+		<tab>
+			<name>notes</name>
+			<resource>tab_main</resource>
+			<class>record_content_text</class>
+			<embed />
+		</tab>
+		<tab merge="add">
+			<name>main</name>
+			<resource>tab_other</resource>
+			<class>referencesubrace_main</class>
+			<embed />
+		</tab>
+	</windowclass>
+	<windowclass name="referencesubrace_header" copy="record_header">
+		<name_emptyres>library_recordtype_empty_race_subrace</name_emptyres>
+	</windowclass>
+
+	<windowclass name="referencesubrace_main">
+		<margins control="0,0,0,7" />
+		<script>
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				WindowManager.callSafeControlsSetLockMode(self, { "traits_iadd", }, bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<anchor_content_top />
+
+			<header_content_framed_headersimple name="traits_header">
+				<static textres="race_header_traits"/>
+			</header_content_framed_headersimple>
+			<button_iadd name="traits_iadd">
+				<anchored to="traits_header" position="righthigh" offset="-20,0" />
+				<target>traits</target>
+			</button_iadd>
+			<list_content_top name="traits">
+				<datasource>.racialtraits</datasource>
+				<class>ref_racial_trait</class>
+			</list_content_top>
+		</sheetdata>
+	</windowclass>
+
+	<!--
+	  Patch the base Race record: add a Subraces section above Traits.
+	  Ctrl-drop a race shortcut onto the header to copy it in as a new
+	  subrace (same UX FSOSR/2E both already use) - DB.copyNode brings over
+	  the dragged race's own racialtraits (and, harmlessly, an empty/unused
+	  "subraces" child if the source race had one - referencesubrace_main
+	  never reads or displays that field, so it just sits inert, same as
+	  FSOSR's own identical copy-node approach).
+	-->
+	<windowclass name="referencerace_main" merge="join">
+		<script merge="join">
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				WindowManager.callSafeControlsSetLockMode(self, { "subraces_iadd", "traits_iadd", }, bReadOnly);
+			end
+		</script>
+		<sheetdata merge="join">
+			<header_content_framed_headersimple name="subraces_header" insertbefore="traits_header">
+				<static textres="library_recordtype_label_race_subrace"/>
+				<script>
+					function onDrop(x, y, draginfo)
+						if not draginfo.isType("shortcut") then
+							return;
+						end
+						local sClass, sRecord = draginfo.getShortcutData();
+						if sClass ~= "referencerace" then
+							return;
+						end
+						if WindowManager.getWindowReadOnlyState(window) then
+							return;
+						end
+						if not Input.isControlPressed() then
+							return;
+						end
+						local nodeRaceSource = DB.findNode(sRecord);
+						local nodeRace = window.getDatabaseNode();
+						local nodeNewSubraces = DB.createChild(nodeRace, "subraces");
+						local nodeNewSubrace = DB.createChild(nodeNewSubraces);
+						DB.copyNode(nodeRaceSource, nodeNewSubrace);
+						return true;
+					end
+				</script>
+			</header_content_framed_headersimple>
+			<button_iadd name="subraces_iadd" insertbefore="traits_header">
+				<anchored to="subraces_header" position="righthigh" offset="-20,0" />
+				<target>subraces</target>
+			</button_iadd>
+			<list_content_top name="subraces" insertbefore="traits_header">
+				<datasource>.subraces</datasource>
+				<class>ref_35e_subrace_listitem</class>
+			</list_content_top>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="ref_35e_subrace_listitem">
+		<margins control="0,0,0,2" />
+		<script>
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				WindowManager.callSafeControlsSetLockMode(self, { "name", "idelete" }, bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<anchor_listitem_left_sm />
+			<anchor_listitem_right_sm />
+
+			<button_listitem_idelete_left name="idelete" />
+			<link_listitem_left name="link">
+				<class>referencesubrace</class>
+			</link_listitem_left>
+
+			<string_listitem_center name="name">
+				<empty textres="library_recordtype_empty_race_subrace" />
+				<font>sheetlabel</font>
+			</string_listitem_center>
+		</sheetdata>
+	</windowclass>
+</root>

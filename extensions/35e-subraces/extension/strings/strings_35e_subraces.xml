@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+	<string name="char_title_selectsubrace">Select Subrace</string>
+	<string name="char_message_selectsubrace">Select a subrace of %s.</string>
+	<string name="char_message_subraceadd">%s subrace added to %s.</string>
+</root>
