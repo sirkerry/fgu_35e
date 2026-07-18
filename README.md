@@ -25,3 +25,9 @@ also excludes `forge/` and `*.svg` as a safety net.
   `Feature: Extended Automation` extension, which already implements the
   ADV/DIS roll mechanic itself — this extension supplies the missing UI
   plus a numeric-modifier engine for the +1/-2/+5 buttons.
+- **[35e-target20](extensions/35e-target20/README.md)** — Target 20.
+  Ability checks, skill checks, saving throws, and attack/grapple rolls
+  always compare against a flat 20 — any natural target (a spell's DC, or
+  a target's AC/CMD) is folded into the roll as a bonus/penalty instead of
+  changing the target number. Ability/skill/save rolls also add character
+  level; attack/grapple rolls do not.

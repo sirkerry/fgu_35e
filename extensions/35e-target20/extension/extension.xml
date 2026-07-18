@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root version="4.1">
+	<properties>
+		<name>Feature: 3.5E/PFRPG Target 20</name>
+		<version>1.0</version>
+		<author>Kerry Harrison (sirkerry)</author>
+		<description>Standardizes ability checks, skill checks, saving throws, and attack/grapple rolls to always compare against a flat 20. Any natural target (a spell's DC, or a target's AC/CMD) is folded into the roll as a bonus/penalty instead of changing the target number. Ability/skill/save rolls also always add character level; attack/grapple rolls do not.</description>
+		<ruleset>
+			<name>3.5E</name>
+		</ruleset>
+		<ruleset>
+			<name>PFRPG</name>
+		</ruleset>
+		<loadorder>40</loadorder>
+	</properties>
+
+	<announcement text="3.5E/PFRPG Target 20 - Version 1.0 by sirkerry" font="emotefont" />
+
+	<base>
+		<script name="Target20Manager" file="scripts/manager_35e_target20.lua" />
+	</base>
+</root>
