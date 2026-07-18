@@ -37,3 +37,9 @@ also excludes `forge/` and `*.svg` as a safety net.
   a race onto it to copy it in as a new subrace; applying a race with
   subraces to a character prompts for which one, then applies that
   subrace's own traits alongside the base race's.
+- **[35e-expdmg](extensions/35e-expdmg/README.md)** — Exploding Damage.
+  Classic exploding-dice house rule for all damage rolls, weapons and
+  spells alike — any die that lands on its maximum value rerolls and adds
+  to the total, chaining if it explodes again. Uses FGU's own native
+  compound-explode die mode, one monkey-patch of the shared
+  `ActionDamageD20.getRoll`.

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root version="4.1">
+	<properties>
+		<name>Feature: 3.5E/PFRPG Exploding Damage</name>
+		<version>1.0</version>
+		<author>Kerry Harrison (sirkerry)</author>
+		<description>Classic exploding-dice house rule for all damage rolls - weapons and spells alike. When a damage die rolls its maximum possible value, it rerolls and adds the new result to the total, chaining if the reroll also explodes. Uses FGU's own native compound-explode ("e!") die mode, not custom reroll logic.</description>
+		<ruleset>
+			<name>3.5E</name>
+		</ruleset>
+		<ruleset>
+			<name>PFRPG</name>
+		</ruleset>
+		<loadorder>40</loadorder>
+	</properties>
+
+	<announcement text="3.5E/PFRPG Exploding Damage - Version 1.0 by sirkerry" font="emotefont" />
+
+	<base>
+		<script name="ExpDmg35EManager" file="scripts/manager_35e_expdmg.lua" />
+	</base>
+</root>
